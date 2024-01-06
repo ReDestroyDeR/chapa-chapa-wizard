@@ -353,7 +353,8 @@ fn get_animation(tile: Tile) -> Option<AnimatedTile> {
                 warn!("[{tileset_name} {id}] Frame {i} is not right after {previous_id}. Animation is not possible");
                 return None;
             }
-                    previous = current;
+            
+            previous = current;
             previous_id = id;
         }
 
