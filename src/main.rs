@@ -5,6 +5,7 @@ mod player;
 use crate::motd::MotdPlugin;
 use bevy::prelude::*;
 use bevy_ecs_tilemap::TilemapPlugin;
+use player::PlayerPlugin;
 
 fn main() {
     App::new()
@@ -21,9 +22,9 @@ fn main() {
         )
         .add_plugins(MotdPlugin)
         .add_plugins(TilemapPlugin)
+        .add_plugins(PlayerPlugin)
         .add_plugins(helpers::tiled::TiledMapPlugin)
         .add_systems(Startup, startup)
-        .add_systems(Update, helpers::camera::movement)
         .run();
 }
 
