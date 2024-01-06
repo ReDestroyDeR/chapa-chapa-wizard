@@ -3,15 +3,8 @@ mod motd;
 mod player;
 
 use crate::motd::MotdPlugin;
-use bevy::sprite::MaterialMesh2dBundle;
-use bevy::{
-    asset::{Asset, AssetLoader},
-    prelude::*,
-    reflect::{TypePath, TypeUuid},
-};
-use bevy_asset_loader::prelude::*;
+use bevy::prelude::*;
 use bevy_ecs_tilemap::TilemapPlugin;
-use rand::Rng;
 
 fn main() {
     App::new()
