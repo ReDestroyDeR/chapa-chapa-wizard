@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 use bevy::{
     asset::{AssetLoader, AssetPath, LoadedAsset},
-    log,
+    log::{self, warn},
     prelude::{
         AddAsset, Added, AssetEvent, Assets, Bundle, Commands, Component, DespawnRecursiveExt,
         Entity, EventReader, GlobalTransform, Handle, Image, Plugin, Query, Res, Transform, Update,
@@ -17,6 +17,7 @@ use bevy::{
 use bevy_ecs_tilemap::prelude::*;
 
 use anyhow::Result;
+use tiled::{LayerTile, Tile};
 
 #[derive(Default)]
 pub struct TiledMapPlugin;
@@ -286,19 +287,24 @@ pub fn process_loaded_maps(
                                 };
 
                                 let tile_pos = TilePos { x, y };
-                                let tile_entity = commands
-                                    .spawn(TileBundle {
-                                        position: tile_pos,
-                                        tilemap_id: TilemapId(layer_entity),
-                                        texture_index: TileTextureIndex(texture_index),
-                                        flip: TileFlip {
-                                            x: layer_tile_data.flip_h,
-                                            y: layer_tile_data.flip_v,
-                                            d: layer_tile_data.flip_d,
-                                        },
-                                        ..Default::default()
-                                    })
-                                    .id();
+                                let tile = TileBundle {
+                                    position: tile_pos,
+                                    tilemap_id: TilemapId(layer_entity),
+                                    texture_index: TileTextureIndex(texture_index),
+                                    flip: TileFlip {
+                                        x: layer_tile_data.flip_h,
+                                        y: layer_tile_data.flip_v,
+                                        d: layer_tile_data.flip_d,
+                                    },
+                                    ..Default::default()
+                                };
+                                let animation = layer_tile.get_tile().and_then(get_animation);
+
+                                let tile_entity = match animation {
+                                    Some(a) => commands.spawn((tile, a)),
+                                    None => commands.spawn(tile),
+                                }.id();
+                                    
                                 tile_storage.set(&tile_pos, tile_entity);
                             }
                         }
@@ -327,5 +333,44 @@ pub fn process_loaded_maps(
                 }
             }
         }
+    }
+}
+
+fn get_animation(tile: Tile) -> Option<AnimatedTile> {
+    // no animation
+    if tile.animation.is_none() {
+        return None;
+    }
+
+    let tileset_name = &tile.tileset().name;
+
+    if let Some(a) = tile.animation.as_ref().filter(|a| a.len() > 1) {
+        let mut previous = a[0].duration;
+        let mut previous_id = a[0].tile_id;
+
+        for (i, frame) in (&a[1..]).iter().enumerate() {
+            let current = frame.duration;
+            let id = frame.tile_id;
+
+            if current != previous {
+                warn!("[{tileset_name} {id}] Frame {i} duration does not match previous. {current} != {previous}");
+            }
+
+            if id - 1 != previous_id {
+                warn!("[{tileset_name} {id}] Frame {i} is not right after {previous_id}. Animation is not possible");
+                return None;
+            }
+                    previous = current;
+            previous_id = id;
+        }
+
+        Some(AnimatedTile {
+            start: a[0].tile_id,
+            end: a[a.len() - 1].tile_id,
+            speed: (a[0].duration as f32) / 100.,
+        })
+    } else {
+        warn!("[{tileset_name}] Animation is defined, but has only 0 or 1 frames");
+        None
     }
 }

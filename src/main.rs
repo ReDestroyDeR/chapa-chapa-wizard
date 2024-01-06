@@ -34,25 +34,13 @@ fn main() {
         .run();
 }
 
-fn startup(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<ColorMaterial>>,
-) {
-    commands.spawn(Camera2dBundle::default());
+fn startup(mut commands: Commands, asset_server: Res<AssetServer>) {
+    commands.spawn(Camera2dBundle::default()); 
 
     let map_handle: Handle<helpers::tiled::TiledMap> = asset_server.load("levels/level1.tmx");
 
     commands.spawn(helpers::tiled::TiledMapBundle {
         tiled_map: map_handle,
-        ..default()
-    });
-
-    commands.spawn(MaterialMesh2dBundle {
-        mesh: meshes.add(Mesh::from(shape::Quad::default())).into(),
-        transform: Transform::default().with_scale(Vec3::splat(128.)),
-        material: materials.add(ColorMaterial::from(Color::PINK)),
         ..default()
     });
 }
