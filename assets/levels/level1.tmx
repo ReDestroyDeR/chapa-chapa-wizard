@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="64" tileheight="64" infinite="0" nextlayerid="18" nextobjectid="1">
  <tileset firstgid="1" name="Tilemap_Flat" tilewidth="64" tileheight="64" tilecount="40" columns="10">
-  <image source="C:/Users/red/RustroverProjects/chapa-chapa-wizard/assets/sprites/Terrain/Ground/Tilemap_Flat.png" width="640" height="256"/>
+  <image source="tileset/Terrain/Ground/Tilemap_Flat.png" width="640" height="256"/>
  </tileset>
  <tileset firstgid="41" name="Tilemap_Elevation" tilewidth="64" tileheight="64" tilecount="32" columns="4">
-  <image source="C:/Users/red/RustroverProjects/chapa-chapa-wizard/assets/sprites/Terrain/Ground/Tilemap_Elevation.png" width="256" height="512"/>
+  <image source="tileset/Terrain/Ground/Tilemap_Elevation.png" width="256" height="512"/>
  </tileset>
  <tileset firstgid="73" name="Shadows" tilewidth="64" tileheight="64" tilecount="9" columns="3">
-  <image source="C:/Users/red/RustroverProjects/chapa-chapa-wizard/assets/sprites/Terrain/Ground/Shadows.png" width="192" height="192"/>
+  <image source="tileset/Terrain/Ground/Shadows.png" width="192" height="192"/>
  </tileset>
  <tileset firstgid="82" name="Bridge_All" tilewidth="64" tileheight="64" tilecount="12" columns="3">
-  <image source="C:/Users/red/RustroverProjects/chapa-chapa-wizard/assets/sprites/Terrain/Bridge/Bridge_All.png" width="192" height="256"/>
+  <image source="tileset/Terrain/Bridge/Bridge_All.png" width="192" height="256"/>
  </tileset>
  <tileset firstgid="94" name="Water" tilewidth="64" tileheight="64" tilecount="1" columns="1">
-  <image source="C:/Users/red/RustroverProjects/chapa-chapa-wizard/assets/sprites/Terrain/Water/Water.png" width="64" height="64"/>
+  <image source="tileset/Terrain/Water/Water.png" width="64" height="64"/>
  </tileset>
  <tileset firstgid="95" name="Foam" tilewidth="64" tileheight="64" tilecount="72" columns="24">
-  <image source="C:/Users/red/RustroverProjects/chapa-chapa-wizard/assets/sprites/Terrain/Water/Foam/Foam.png" width="1536" height="192"/>
+  <image source="tileset/Terrain/Water/Foam/Foam.png" width="1536" height="192"/>
  </tileset>
  <tileset firstgid="167" name="Rocks_01" tilewidth="64" tileheight="64" tilecount="32" columns="16">
-  <image source="C:/Users/red/RustroverProjects/chapa-chapa-wizard/assets/sprites/Terrain/Water/Rocks/Rocks_01.png" width="1024" height="128"/>
+  <image source="tileset/Terrain/Water/Rocks/Rocks_01.png" width="1024" height="128"/>
  </tileset>
- <tileset firstgid="199" source=":/automap-tiles.tsx"/>
  <tileset firstgid="204" name="Rocks_02" tilewidth="64" tileheight="64" tilecount="32" columns="16">
-  <image source="C:/Users/red/RustroverProjects/chapa-chapa-wizard/assets/sprites/Terrain/Water/Rocks/Rocks_02.png" width="1024" height="128"/>
+  <image source="tileset/Terrain/Water/Rocks/Rocks_02.png" width="1024" height="128"/>
  </tileset>
  <tileset firstgid="236" name="Rocks_03" tilewidth="64" tileheight="64" tilecount="32" columns="16">
-  <image source="C:/Users/red/RustroverProjects/chapa-chapa-wizard/assets/sprites/Terrain/Water/Rocks/Rocks_03.png" width="1024" height="128"/>
+  <image source="tileset/Terrain/Water/Rocks/Rocks_03.png" width="1024" height="128"/>
  </tileset>
  <tileset firstgid="268" name="Rocks_04" tilewidth="64" tileheight="64" tilecount="32" columns="16">
-  <image source="C:/Users/red/RustroverProjects/chapa-chapa-wizard/assets/sprites/Terrain/Water/Rocks/Rocks_04.png" width="1024" height="128"/>
+  <image source="tileset/Terrain/Water/Rocks/Rocks_04.png" width="1024" height="128"/>
  </tileset>
  <layer id="9" name="water" width="30" height="20">
   <data encoding="csv">
