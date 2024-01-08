@@ -1,0 +1,42 @@
+{
+    "Animated": {
+        "default": "attack_-90",
+        "animations": {
+            "idle": {
+                "first": 0,
+                "last": 5,
+                "speed": 100.0
+            },
+            "run": {
+                "first": 8,
+                "last": 13,
+                "speed": 100.0
+            },
+            "attack_90": {
+                "first": 16,
+                "last": 24,
+                "speed": 100.0
+            },
+            "attack_45": {
+                "first": 24,
+                "last": 32,
+                "speed": 100.0
+            },
+            "attack_0": {
+                "first": 32,
+                "last": 40,
+                "speed": 100.0
+            },
+            "attack_-45": {
+                "first": 40,
+                "last": 48,
+                "speed": 100.0
+            },
+            "attack_-90": {
+                "first": 48,
+                "last": 56,
+                "speed": 100.0
+            }
+        }
+    }
+}

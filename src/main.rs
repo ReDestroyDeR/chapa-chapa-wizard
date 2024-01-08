@@ -1,11 +1,16 @@
 mod helpers;
 mod motd;
 mod player;
+mod animation;
+mod entities;
 
 use crate::motd::MotdPlugin;
 use bevy::prelude::*;
 use bevy_ecs_tilemap::TilemapPlugin;
-use player::{PlayerPlugin, PlayerBundle, AnimationIndices, AnimationTimer};
+use bevy_asset_loader::prelude::*;
+use entities::archer::ArcherBlue;
+use player::{PlayerPlugin, PlayerBundle};
+use animation::{AnimationLoadingStates, SpriteAnimationPlugin, AnimationBundle};
 
 fn main() {
     App::new()
@@ -23,12 +28,18 @@ fn main() {
         .add_plugins(MotdPlugin)
         .add_plugins(TilemapPlugin)
         .add_plugins(PlayerPlugin)
+        .add_plugins(SpriteAnimationPlugin)
+        .add_collection_to_loading_state::<_, ArcherBlue>(AnimationLoadingStates::LoadingSprites)
         .add_plugins(helpers::tiled::TiledMapPlugin)
-        .add_systems(Startup, startup)
+        .add_systems(OnEnter(AnimationLoadingStates::Ready), startup)
         .run();
 }
 
-fn startup(mut commands: Commands, asset_server: Res<AssetServer>, mut texture_atlases: ResMut<Assets<TextureAtlas>>,) {
+fn startup(mut commands: Commands, 
+           archer_blue_res: Res<ArcherBlue>,
+           animation_bundle_assets: Res<Assets<AnimationBundle>>,
+           asset_server: Res<AssetServer>, 
+           mut texture_atlases: ResMut<Assets<TextureAtlas>>,) {
     commands.spawn(Camera2dBundle::default()); 
 
     let map_handle: Handle<helpers::tiled::TiledMap> = asset_server.load("levels/level1.tmx");
@@ -38,24 +49,17 @@ fn startup(mut commands: Commands, asset_server: Res<AssetServer>, mut texture_a
         ..default()
     });
 
-    let archer = asset_server.load("sprites/Factions/Knights/Troops/Archer/Blue/Archer_Blue.png");
     let atlas = 
-        TextureAtlas::from_grid(archer, Vec2::new(192., 192.), 8, 7, None,  None);
+        TextureAtlas::from_grid(archer_blue_res.image.clone(), Vec2::new(192., 192.), 8, 7, None,  None);
     let texture_atlas_handle = texture_atlases.add(atlas);
 
-    let animation_indices = AnimationIndices::Bounded { first: 0, last: 5 };
     commands.spawn(PlayerBundle {
         sprite: SpriteSheetBundle  {
             texture_atlas: texture_atlas_handle,
-            sprite: match animation_indices {
-                AnimationIndices::Bounded{first, last: _} => TextureAtlasSprite::new(first),
-                _ => TextureAtlasSprite::new(0)
-            },
             transform: Transform::from_xyz(0., 0., 100.),
             ..default()
         },
-        animation_indices,
-        animation_timer: AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
+        animations: animation_bundle_assets.get(&archer_blue_res.animations).unwrap().clone(),
         ..default()
     });
 }

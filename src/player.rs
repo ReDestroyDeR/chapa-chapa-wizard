@@ -1,5 +1,6 @@
 use bevy::{prelude::*, input::mouse::MouseWheel};
-use std::cmp::{max, min};
+use std::f32::consts::PI;
+use crate::animation::{Animations, CurrentAnimation, AnimationTimer, AnimationBundle};
 
 #[derive(Component)]
 pub struct Health {
@@ -41,26 +42,16 @@ impl Default for Health {
 #[derive(Default, Component)]
 pub struct Player;
 
-#[derive(Default, Component)]
-pub enum AnimationIndices {
-    #[default]
-    NoAnimation,
-    Bounded{
-        first: usize,
-        last: usize,
-    }
-}
-
-#[derive(Default, Component, Deref, DerefMut)]
-pub struct AnimationTimer(pub Timer);
+const IDLE: &str = "idle";
+const RUN: &str = "run";
 
 #[derive(Default, Bundle)]
 pub struct PlayerBundle {
     pub _marker: Player,
     pub health: Health,
     pub sprite: SpriteSheetBundle,
-    pub animation_indices: AnimationIndices,
-    pub animation_timer: AnimationTimer,
+    pub animations: AnimationBundle,
+    pub animation_timer: AnimationTimer
 }
 
 pub struct PlayerPlugin;
@@ -68,47 +59,52 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
 
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, (movement, animate_sprite));
+        app.add_systems(Update, movement);
     }
 
-}
-
-fn animate_sprite(
-    time: Res<Time>,
-    mut query: Query<(
-        &AnimationIndices,
-        &mut AnimationTimer,
-        &mut TextureAtlasSprite,
-    )>,
-) {
-    for (indices, mut timer, mut sprite) in &mut query {
-        if let AnimationIndices::Bounded{first, last} = indices {
-            timer.tick(time.delta());
-            if timer.just_finished() {
-                sprite.index = if sprite.index == *last {
-                    *first
-                } else {
-                    sprite.index + 1
-                };
-            }
-        }
-    }
 }
 
 fn movement(
     mut mouse_input: EventReader<MouseWheel>,
     keyboard_input: Res<Input<KeyCode>>,
     time: Res<Time>,
-    mut player: Query<&mut Transform, (With<Player>, Without<Camera>)>,
+    mut player: Query<(
+        &mut CurrentAnimation,
+        &Animations,
+        &mut AnimationTimer, 
+        &mut TextureAtlasSprite, 
+        &mut Transform
+    ), (With<Player>, Without<Camera>)>,
     mut camera: Query<(&mut Transform, &mut OrthographicProjection), With<Camera>>,
 ) {
     // Camera
     for (mut camera_transform, mut ortho) in camera.iter_mut() {
-        for mut player_transform in player.iter_mut() {
+        for (
+            mut current_animation,
+            animations,
+            mut timer,
+            mut sprite,
+            mut player_transform
+        ) in player.iter_mut() {
             zoom_handler(&mut mouse_input, &mut ortho);
 
             let z = player_transform.translation.z;
-            player_transform.translation += time.delta_seconds() * direction_from(&keyboard_input) * 500.;
+            let direction = direction_from(&keyboard_input);
+
+            if direction.x > 0. {
+                player_transform.rotation = Quat::from_rotation_y(0.);
+            } else if direction.x < 0. {
+                player_transform.rotation = Quat::from_rotation_y(PI);
+            }
+
+            // idle / run
+            if direction.length() == 0. {
+                current_animation.change(&animations.get(IDLE), &mut sprite, &mut timer);
+            } else {
+                current_animation.change(&animations.get(RUN), &mut sprite, &mut timer);
+            }
+
+            player_transform.translation += time.delta_seconds() * direction * 500.;
             // Important! We need to restore the Z values when moving the camera around.
             // Bevy has a specific camera setup and this can mess with how our layers are shown.
             player_transform.translation.z = z;
@@ -159,5 +155,3 @@ fn zoom_handler(mouse_input: &mut EventReader<'_, '_, MouseWheel>, ortho: &mut M
         ortho.scale = 0.5;
     }
 }
-
-
