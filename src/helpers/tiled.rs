@@ -296,8 +296,9 @@ pub fn process_loaded_maps(
                                 let tile_entity = match animation {
                                     Some(a) => commands.spawn((tile, a)),
                                     None => commands.spawn(tile),
-                                }.id();
-                                    
+                                }
+                                .id();
+
                                 tile_storage.set(&tile_pos, tile_entity);
                             }
                         }
@@ -353,7 +354,7 @@ fn get_animation(tile: Tile) -> Option<AnimatedTile> {
                 warn!("[{tileset_name} {id}] Frame {i} is not right after {previous_id}. Animation is not possible");
                 return None;
             }
-            
+
             previous = current;
             previous_id = id;
         }

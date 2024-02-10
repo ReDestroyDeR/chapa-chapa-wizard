@@ -1,5 +1,5 @@
 {
-    "activeFile": "",
+    "activeFile": "level1.tmx",
     "expandedProjectPaths": [
     ],
     "fileStates": {
@@ -8,11 +8,11 @@
             "scaleInEditor": 1
         },
         "level1.tmx": {
-            "scale": 0.75,
+            "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 1236,
-                "y": 943.9999999999999
+                "x": 560,
+                "y": 664
             }
         },
         "level1.tmx#Bridge_All": {
@@ -73,6 +73,7 @@
     },
     "last.imagePath": "C:/Users/red/RustroverProjects/chapa-chapa-wizard/assets/levels/tileset/Terrain/Water/Foam",
     "openFiles": [
+        "level1.tmx"
     ],
     "project": "ccwp.tiled-project",
     "recentFiles": [
