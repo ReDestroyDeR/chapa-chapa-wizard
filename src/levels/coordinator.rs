@@ -44,8 +44,7 @@ fn handle_out_of_bounds<'a>(
                 .expect("LevelConfig not found or unexpectedly unloaded!");
             moving_entities.for_each_mut(|mut entity_transform| {
                 let entity_world_pos = entity_transform.translation.xy();
-                let coordinate_zero =
-                    tiled_top_left(map_transform.translation.xy(), map_size, grid_size);
+                let coordinate_zero = map_transform.translation.xy().tiled_top_left(map_size, grid_size);
                 let entity_position = entity_world_pos.relative_to(&coordinate_zero).abs();
                 let pos = TilePos::from_world_pos(&entity_position, map_size, grid_size, map_type);
 
@@ -95,8 +94,4 @@ fn handle_out_of_bounds<'a>(
             })
         })
     })
-}
-
-fn tiled_top_left(pos: Vec2, map_size: &TilemapSize, grid_size: &TilemapGridSize) -> Vec2 {
-    Vec2::new(pos.x, pos.y + grid_size.y * ((map_size.y - 1) as f32))
 }

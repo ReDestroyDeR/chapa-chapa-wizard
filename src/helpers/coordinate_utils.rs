@@ -9,6 +9,8 @@ pub trait CoordinateOps {
     fn abs(&self) -> Self;
 
     fn copy_signs(&self, other: &Self) -> Self;
+
+    fn tiled_top_left(&self, map_size: &TilemapSize, grid_size: &TilemapGridSize) -> Self;
 }
 
 impl CoordinateOps for Vec2 {
@@ -27,11 +29,12 @@ impl CoordinateOps for Vec2 {
     fn copy_signs(&self, other: &Self) -> Self {
         Vec2::new(self.x.copysign(other.x), self.y.copysign(other.y))
     }
+
+    fn tiled_top_left(&self, map_size: &TilemapSize, grid_size: &TilemapGridSize) -> Self {
+        Vec2::new(self.x, self.y + grid_size.y * ((map_size.y - 1) as f32))
+    }
 }
 
-pub fn tiled_top_left(pos: Vec2, map_size: &TilemapSize, grid_size: &TilemapGridSize) -> Vec2 {
-    Vec2::new(pos.x, pos.y + grid_size.y * ((map_size.y - 1) as f32))
-}
 
 #[cfg(test)]
 mod tests {

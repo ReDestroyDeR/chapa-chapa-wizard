@@ -203,6 +203,7 @@ pub struct Level {
 pub struct LevelConfig {
     pub tile_size: f32,
     pub walkable_tiles: WalkableTiles,
+    pub spawn_point: bevy::math::Vec2,
 }
 
 #[derive(Default, Deserialize, Debug)]

@@ -48,21 +48,10 @@ fn animations(
     mut commands: Commands,
     archer_blue_res: Res<ArcherBlue>,
     animation_bundle_assets: Res<Assets<AnimationBundle>>,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    let atlas = TextureAtlas::from_grid(
-        archer_blue_res.image.clone(),
-        Vec2::new(192., 192.),
-        8,
-        7,
-        None,
-        None,
-    );
-    let texture_atlas_handle = texture_atlases.add(atlas);
-
     commands.spawn(PlayerBundle {
         sprite: SpriteSheetBundle {
-            texture_atlas: texture_atlas_handle,
+            texture_atlas: archer_blue_res.texture_atlas.clone(),
             transform: Transform::from_xyz(64. * -5., 64. * 2., 100.),
             ..default()
         },

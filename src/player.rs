@@ -1,6 +1,6 @@
 use crate::{
     animation::{AnimationBundle, AnimationTimer, Animations, CurrentAnimation},
-    helpers::coordinate_utils::{tiled_top_left, CoordinateOps},
+    helpers::coordinate_utils::CoordinateOps,
     levels::{Level, LevelConfig},
 };
 use bevy::{input::mouse::MouseWheel, math::Vec3Swizzles, prelude::*};
@@ -153,7 +153,7 @@ fn is_hitting_obstacle(
                 .expect("LevelConfig not found or unexpectedly unloaded!");
             let entity_world_pos = entity_translation.xy();
             let coordinate_zero =
-                tiled_top_left(map_transform.translation.xy(), map_size, grid_size);
+                map_transform.translation.xy().tiled_top_left(map_size, grid_size);
             let entity_position = entity_world_pos.relative_to(&coordinate_zero).abs();
             let pos = TilePos::from_world_pos(&entity_position, map_size, grid_size, map_type);
 

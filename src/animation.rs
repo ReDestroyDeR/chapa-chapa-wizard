@@ -42,20 +42,19 @@ impl Animations {
     }
 }
 
-#[derive(Bundle, Default, TypePath, TypeUuid, Clone)]
+#[derive(Bundle, Default, TypePath, TypeUuid, Clone, Deserialize)]
 #[uuid = "185a795e-a515-43ac-89f1-ddf1bfdfa667"]
+#[serde(try_from="AnimationConfig")]
 pub struct AnimationBundle {
     default: CurrentAnimation,
     animations: Animations,
 }
 
-impl<'de> Deserialize<'de> for AnimationBundle {
-    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        AnimationConfig::deserialize(deserializer)
-            .and_then(|dto| Self::new(&dto).map_err(|e| serde::de::Error::custom(e)))
+impl TryFrom<AnimationConfig> for AnimationBundle {
+    type Error = anyhow::Error;
+
+    fn try_from(cfg: AnimationConfig) -> Result<Self, Self::Error> {
+        Self::new(&cfg)
     }
 }
 
